@@ -21,7 +21,8 @@ Demo Base - 基本
 
 **Demo Pic - “有图有真相”**
 
-关键词：附图，图片边框，尺寸
+关键词：附图，图片边框，尺寸            
+
 ![demo](http://littendomo.sinaapp.com/kaer-qrcode/qrcode-pic.jpg)
 ```js
 	var kaelPic = new KaelQrcode();
@@ -36,7 +37,8 @@ Demo Base - 基本
 ```
 **Demo Sae - “如果大海能够带走我的哀愁”**        
 
-关键词：圆角，前景色，背景色，渐变
+关键词：圆角，前景色，背景色，渐变           
+
 ![demo](http://littendomo.sinaapp.com/kaer-qrcode/qrcode-sea.jpg)
 ```js
 	var kaelSea = new KaelQrcode();
@@ -56,7 +58,8 @@ Demo Base - 基本
 
 **Demo Iron - “钢铁是怎样炼成的”**     
 
-关键词：阴影
+关键词：阴影            
+
 ![demo](http://littendomo.sinaapp.com/kaer-qrcode/qrcode-iron.jpg)
 ```js
 	var kaelIron = new KaelQrcode();
@@ -78,7 +81,8 @@ Demo Base - 基本
 ```
 **Demo Iron - “万紫千红总是春”**      
 
-关键词：单点
+关键词：单点        
+
 ![demo](http://littendomo.sinaapp.com/kaer-qrcode/qrcode-point.jpg)
 ```js
 	var kaelPoint = new KaelQrcode();
