@@ -7,15 +7,15 @@
 		*{margin: 0;padding: 0}
 		body{background: #eee;}
 		.ctn{width: 960px;margin: 0 auto;}
-		.ctn div{margin: 10px;float:left;}
+		.ctn .qr-ctn{margin: 10px;float:left;}
 	</style>
 </head>
 <body>
 	<div class="ctn">
-		<div id="qr-base"></div>
-		<div id="qr-iron"></div>
-		<div id="qr-sea"></div>
-		<div id="qr-round"></div>
+		<div class="qr-ctn" id="qr-base"></div>
+		<div class="qr-ctn" id="qr-iron"></div>
+		<div class="qr-ctn" id="qr-sea"></div>
+		<div class="qr-ctn" id="qr-round"></div>
 	</div>
 	
 	<script src="../build/kaelQrcode.min.js"></script>
@@ -23,64 +23,55 @@
 	<script>
 	window.onload = function(){
 		var kaelBase = new KaelQrcode();
-		document.getElementById("qr-base").appendChild(
-			kaelBase.init({
-				text : "hello KaelQrcode",
-				size: 300,
-				img: {
-					src : "kael-ico.jpg"
-				}
-			})
-		);
+		kaelBase.init(document.getElementById("qr-base"), {
+			text : "hello KaelQrcode",
+			size: 300,
+			img: {
+				src : "kael-ico.jpg"
+			}
+		});
 
 		var kaelSea = new KaelQrcode();
-		document.getElementById("qr-sea").appendChild(
-			kaelSea.init({
-				text : "hello KaelQrcode",
-				size: 300,
-				color: {
-					'0': 'rgb(1, 158, 213)',
-					'0.2': 'rgb(30, 169, 224)',
-					'0.6': 'rgb(0, 120, 191)',
-					'1': 'rgb(1, 119, 255)'
-				},
-				background: "#d3e3f0",
-				type: "round"
-			})
-		);
+		kaelSea.init(document.getElementById("qr-sea"), {
+			text : "hello KaelQrcode",
+			size: 300,
+			color: {
+				'0': 'rgb(1, 158, 213)',
+				'0.2': 'rgb(30, 169, 224)',
+				'0.6': 'rgb(0, 120, 191)',
+				'1': 'rgb(1, 119, 255)'
+			},
+			background: "#d3e3f0",
+			type: "round"
+		});
 
 		var kaelIron = new KaelQrcode();
-		document.getElementById("qr-iron").appendChild(
-			kaelIron.init({
-				text : "hello KaelQrcode",
-				size: 300,
-				color: {
-					'0': 'rgb(30, 30, 30)',
-					'0.2': 'rgb(70, 70, 70)',
-					'1': 'rgb(40, 40, 40)'
-				},
-				background: {
-					'0': 'rgb(233, 233, 233)',
-					'0.2': 'rgb(246, 246, 246)',
-					'1': 'rgb(212, 212, 212)'
-				},
-				shadow: true
-			})
-		);
+		kaelIron.init(document.getElementById("qr-iron"), {
+			text : "hello KaelQrcode",
+			size: 300,
+			color: {
+				'0': 'rgb(30, 30, 30)',
+				'0.2': 'rgb(100, 100, 100)',
+				'1': 'rgb(40, 40, 40)'
+			},
+			background: {
+				'0': 'rgb(233, 233, 233)',
+				'0.2': 'rgb(246, 246, 246)',
+				'1': 'rgb(212, 212, 212)'
+			},
+			shadow: true
+		})
 		console.log(kaelIron.config);
 
 		var kaelRound = new KaelQrcode();
-		document.getElementById("qr-round").appendChild(
-			kaelRound.init({
-				text : "hello KaelQrcode",
-				size: 300,
-				color: "#50528f",
-				background: "e7e0cf",
-				pointColor: "#ee256c",
-				type: "round",
-				shadow: true
-			})
-		);
+		kaelRound.init(document.getElementById("qr-round"), {
+			text : "hello KaelQrcode",
+			size: 300,
+			color: "#50528f",
+			background: "e7e0cf",
+			pointColor: "#ee256c",
+			type: "round"
+		});
 	}
 	
 	</script>

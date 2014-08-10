@@ -189,13 +189,26 @@ var KaelQrcode = function(){
 	    }
 	}
 	//画单点
-	var drawPoint = function(edgeResult){
+	var drawPoint = function(edgeResult, isShadow){
+		var shadowColor = Tool.changeRGB(basicConfig.color, -20);
+ 		var pointShadowColor = Tool.changeRGB(basicConfig.pointColor, -20);
+
 		if((edgeResult["l"] || edgeResult["r"] || edgeResult["t"] || edgeResult["b"])){
-        	ctx.strokeStyle = config.color; 
-        	ctx.fillStyle = config.color;
+			if(isShadow){
+				ctx.fillStyle = shadowColor;
+			}else{
+				ctx.strokeStyle = config.color; 
+        		ctx.fillStyle = config.color;
+			}
+        	
         }else{
-        	ctx.strokeStyle = config.pointColor; 
-        	ctx.fillStyle = config.pointColor;
+        	if(isShadow){
+				ctx.fillStyle = pointShadowColor;
+			}else{
+				ctx.strokeStyle = config.pointColor; 
+        		ctx.fillStyle = config.pointColor;
+			}
+        	
         }
 	}
 	//画背景
@@ -204,56 +217,8 @@ var KaelQrcode = function(){
 		ctx.fillRect(0, 0, config.width, config.height); 
 	}
 
-	//画阴影
-	var drawShadow = function(opt){
-		var row = opt.row;
-		var col = opt.col;
-		var tileW = opt.tileW;
-		var tileH = opt.tileH;
-		var w = opt.w;
-		var h = opt.h;
-		var shadowW = config.width/150;
-
-		var shadow;
-		shadow = basicConfig.color?Tool.changeRGB(basicConfig.color, -30) : "#000";
-
-		var edgeResult = edgeTest(row, col);
-		var edgeUpResult = {"l": false,"r":false};
-		if(row !=0){
-			//正上方一个的测试结果，主要要知道左边有没有元素
-			var edgeUpResult = edgeTest(row-1, col);
-		}
-		
-
-		if(!edgeResult["l"]){
-			if(edgeResult["t"] || edgeUpResult["l"]){
-				ctx.fillStyle = shadow;
-				ctx.fillRect(Math.round(col*tileW)-shadowW, Math.round(row*tileH), shadowW , h);
-				//ctx.fillStyle = shadowWeak;
-				//ctx.fillRect(Math.round(col*tileW)-shadowW, Math.round(row*tileH), shadowW/2 , h);
-			}else{
-				ctx.fillStyle = shadow;
-				ctx.fillRect(Math.round(col*tileW)-shadowW, Math.round(row*tileH)-shadowW, shadowW , h+shadowW);
-				//ctx.fillStyle = shadowWeak;
-				//ctx.fillRect(Math.round(col*tileW)-shadowW, Math.round(row*tileH)-shadowW, shadowW/2 , h+shadowW/2);
-			}
-			
-		}
-		if(!edgeResult["t"]){
-			if(edgeUpResult["r"]){
-				ctx.fillStyle = shadow;
-				ctx.fillRect(Math.round(col*tileW),Math.round(row*tileH)-shadowW, w-shadowW, shadowW);
-			}else{
-				ctx.fillStyle = shadow;
-				ctx.fillRect(Math.round(col*tileW),Math.round(row*tileH)-shadowW, w, shadowW);
-				//ctx.fillStyle = shadowWeak;
-				//ctx.fillRect(Math.round(col*tileW),Math.round(row*tileH)-shadowW, w, shadowW/2);
-			}
-		}
-	}
-
 	//画二维码
-	var drawCode = function(type, opt){
+	var drawCode = function(type, opt, isShadow){
 		var row = opt.row;
 		var col = opt.col;
 		var tileW = opt.tileW;
@@ -261,29 +226,48 @@ var KaelQrcode = function(){
 		var w = opt.w;
 		var h = opt.h;
  		
+ 		var shadowColor = Tool.changeRGB(basicConfig.color, -20);
+ 		var pointShadowColor = Tool.changeRGB(basicConfig.pointColor, -20);
 
 		if(type == "round"){
 			//圆角
 			var isDark = qrcode.isDark(row, col);
 			if(isDark){
 
+				var edgeResult = edgeTest(row, col);
+
 				var imgSize = config.width/5;
 		      	var imgPos = config.width/10*4;
 		      	//图片border
-		      	ctx.fillStyle = config.color;
-		        ctx.strokeStyle = config.color;  
+		      	if(isShadow){
+		      		ctx.fillStyle = shadowColor;
+		        	ctx.strokeStyle = shadowColor; 
+		      	}else{
+		      		///////////////todo：确认有没有视觉偏差
+			        var w = (col+1)*tileW - col*tileW;
+					var h = (row+1)*tileW - row*tileW;
+
+		      		//单点设定颜色
+					if(config.pointColor){
+						drawPoint(edgeResult, isShadow);
+					}else{
+						ctx.fillStyle = config.color;
+	        			ctx.strokeStyle = config.color; 
+					}
+		      	}
 		        ctx.lineWidth   = 2;  
 		        ctx.globalAlpha   = 1;  
 		        ctx.lineCap = "round";  
 		        ctx.lineJoin = "round";  
 		        ctx.beginPath();  
-		        var w = ((col+1)*tileW - col*tileW) -1;
-				var h = ((row+1)*tileH - row*tileH) -1;
+
+		        
+
 		        var posX = Math.round(col*tileW);
 		        var posY = Math.round(row*tileH);
 		        var r = w/2;
 
-				var edgeResult = edgeTest(row, col);
+				
 				//console.log(edgeResult);
 
 				if(!edgeResult["l"] && !edgeResult["t"]){
@@ -321,12 +305,8 @@ var KaelQrcode = function(){
 					ctx.lineTo(posX, posY);
 				}
 				
-				//单点设定颜色
-				if(config.pointColor){
-					drawPoint(edgeResult);
-				}
 				
-
+				
 		        ctx.stroke();  
 		        
 		        ctx.fill();
@@ -337,38 +317,54 @@ var KaelQrcode = function(){
 			//单点设定颜色
 			var isDark = qrcode.isDark(row, col);
 			if(isDark){
-
-				/////////////////////////阴影start
-				if(config.shadow){
-					drawShadow(opt);
-				}
-				/////////////////////////阴影end
-
+				
+				
 				if(config.pointColor){
-					drawPoint(edgeTest(row, col));
+					drawPoint(edgeTest(row, col), isShadow);
+				}else{
+					if(isShadow){
+						ctx.fillStyle = shadowColor;
+					}else{
+						ctx.fillStyle = config.color;
+					}
 				}
-
-				ctx.fillStyle = config.color;
 				ctx.fillRect(Math.round(col*tileW),Math.round(row*tileH), w, h); 
 			}
 		}
 		
 	}
 
+	//生成二维码
 	var createCanvas = function(){
 
 		var tileW	= config.width  / qrcode.getModuleCount();
 		var tileH	= config.height / qrcode.getModuleCount();
 		
 		drawBg();
+
+		//绘制阴影
+		if(config.shadow){
+			for( var row = 0; row < qrcode.getModuleCount(); row++ ){
+				for( var col = 0; col < qrcode.getModuleCount(); col++ ){
+					var w = (Math.ceil((col+1)*tileW) - Math.floor(col*tileW));
+					var h = (Math.ceil((row+1)*tileW) - Math.floor(row*tileW));
+					var shadowW = config.width/150;
+					drawCode(config.type, {
+						row: row,
+						col: col,
+						tileW: tileW,
+						tileH: tileH,
+						w: w+shadowW,
+						h: h+shadowW
+					}, true);
+				}
+			}
+		}
 		//基本
 		for( var row = 0; row < qrcode.getModuleCount(); row++ ){
 			for( var col = 0; col < qrcode.getModuleCount(); col++ ){
-
 				var w = (Math.ceil((col+1)*tileW) - Math.floor(col*tileW));
 				var h = (Math.ceil((row+1)*tileW) - Math.floor(row*tileW));
-
-				
 				drawCode(config.type, {
 					row: row,
 					col: col,
@@ -380,7 +376,6 @@ var KaelQrcode = function(){
 				 
 			}
 		}
-		
 
 		//绘制图片
 		if(config.img){
@@ -388,9 +383,10 @@ var KaelQrcode = function(){
 		}
 		
 		return canvas;
+		
 	}	
 
-	var init = function(options){
+	var init = function(dom, options){
 		basicConfig = options;
 
 		if( typeof options === 'string' ){
@@ -401,6 +397,7 @@ var KaelQrcode = function(){
 
 		config.width = options.size || 150;
 		config.height = options.size || 150;
+		config.shadow = options.shadow || false;
 
 		canvasInit();
 
@@ -409,7 +406,7 @@ var KaelQrcode = function(){
 		config.pointColor = options.pointColor || null;
 
 		config.type = options.type || "base";
-		config.shadow = options.shadow || false;
+		
 
 		//图片
 		if(typeof(options.img) == "string"){
@@ -456,9 +453,7 @@ var KaelQrcode = function(){
 
 		
 		qrcodeInit();
-		
-
-		return createCanvas();
+		dom.appendChild(createCanvas());
 	}
 
 	return {
